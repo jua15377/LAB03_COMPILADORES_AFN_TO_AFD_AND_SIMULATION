@@ -42,5 +42,15 @@ public class Principal {
 
         System.out.println("el estado inicial es");
         System.out.println(afn.getEstadoInicale().getIdentifiacador());
+
+        /**
+         * para DFA
+         */
+        int id = afn.getEstadoInicale().getIdentifiacador();
+        System.out.println(id);
+        System.out.println(afn.getMapaDeEstados());
+        System.out.println("marca");
+        System.out.println(afn.getEstadoEspecifico(id));
+        System.out.println(unaClase.eClousureS2(afn.getEstadoEspecifico(id), afn.getTransicoines()));
     }
 }

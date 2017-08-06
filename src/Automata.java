@@ -79,7 +79,7 @@ public class Automata {
     /**
      * Obtiene un nodo especifico
      */
-    public  Estado obtenerEstado(int id){
+    public  Estado getEstadoEspecifico(int id){
         if (mapaDeEstados.containsKey(id))
             return mapaDeEstados.get(id);
 //        encaso no exista devulve null
@@ -99,5 +99,9 @@ public class Automata {
 
     public HashMap<Integer, Estado> getMapaDeEstados() {
         return mapaDeEstados;
+    }
+
+    public void setMapaDeEstados(HashMap<Integer, Estado> mapaDeEstados) {
+        this.mapaDeEstados = mapaDeEstados;
     }
 }
