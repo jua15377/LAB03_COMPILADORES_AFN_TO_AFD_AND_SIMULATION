@@ -1,0 +1,7 @@
+ESTADOS = {3, 0, 7, 1, 5}
+En total son: 5 estados
+SIMBOLOS = [a, s, d, f]
+INICIO = {0}
+ACEPTACION = {7}
+TRANCIONES = {[5, f, 7]-[0, a, 1]-[1, s, 3]-[3, d, 5]}
+En total son: 4 transiones
