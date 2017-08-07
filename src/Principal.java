@@ -48,5 +48,6 @@ public class Principal {
         HashSet<Estado> estadoInicial = new HashSet<>();
         estadoInicial.add(afn.getEstadoInicale());
         System.out.println(unaClase.eClousureT(estadoInicial,afn.getTransicoines()));
+        System.out.println(unaClase.generacionDeSubSets(afn));
     }
 }

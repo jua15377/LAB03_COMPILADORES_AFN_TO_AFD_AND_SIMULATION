@@ -1,6 +1,3 @@
-
-import jdk.nashorn.internal.ir.WhileNode;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -319,9 +316,7 @@ public class SuperClaseHiperMegaPro {
                     resultadoEclosure.add(u);
                     estadosAanalizar.add(u);
                 }
-
             }
-
         }
         return resultadoEclosure;
     }
@@ -337,7 +332,7 @@ public class SuperClaseHiperMegaPro {
     public HashSet<Estado> moveDeConjuntos(HashSet<Estado> estado, HashSet<Trancision> trancisionesDelAutomata, String simbolo){
         //crea stack con los estados a analizar
         Stack<Estado> estadosAnalizar = new Stack<>();
-        estadosAnalizar.addAll(estado);
+        for(Estado e : estado){estadosAnalizar.add(e);}
         //crea el conjunto de estaddos resultantes
         HashSet<Estado> estadoAlcanzados = new HashSet<>();
         //revisa en cada trancion que cumpla con que el estado inical es estado que se saco del srack
@@ -345,7 +340,8 @@ public class SuperClaseHiperMegaPro {
             Estado e = estadosAnalizar.pop();
             for (Trancision t : trancisionesDelAutomata) {
                 //si se cuple que hay una transico con ese simbolo
-                if (t.getEstadoInicial() == e && t.getSimbolos() == simbolo) {
+                String simTransitiocn = t.getSimbolos();
+                if (t.getEstadoInicial().equals(e)  && simTransitiocn.equals(simbolo)) {
                     //agrega al resultado el estado al conjunto de resultados
                     estadoAlcanzados.add(t.getEstadoFinal());
                 }
@@ -371,6 +367,47 @@ public class SuperClaseHiperMegaPro {
         }
         return  estadoAlcanzados;
     }
+
+    public HashSet<TrancisionesAFD> generacionDeSubSets(Automata automata){
+        //informacion necesarioa del afn
+        HashSet<Estado> estados = automata.getEstados();
+        HashSet<Trancision> trancisions = automata.getTransicoines();
+        //estado de q0 del AFN
+        Estado q0 = automata.getEstadoInicale();
+        //convierta estado a un conjuntocon un elemenoto
+        HashSet<Estado> q0conjunto = new HashSet<>();
+        q0conjunto.add(q0);
+        //almacenar toda la informacion de las trancisiones del futuro AFD
+        HashSet<TrancisionesAFD> dTransicnoes = new HashSet<>();
+        //crea un estaod de los estaods que no se han revisado
+        //stack de conjuntos de estados
+        Stack<HashSet<Estado>> estadoSinMarcar = new Stack<>();
+        //agrega el primer conjunto de estado a estados sin marcar
+        HashSet<Estado> closureInical = eClousureT(q0conjunto, trancisions);
+        estadoSinMarcar.add(closureInical);
+        //este es el conjunto que conitiene los estados "Marcados"
+        HashSet<HashSet<Estado>>  resultado = new HashSet<>();
+        //mientras todavia exista conjuntos de estado en el stack de si "sin marcar"
+        while (!estadoSinMarcar.isEmpty()){
+            //saca un elemento del stack y lo agrega a resultado (marcados)
+            HashSet<Estado> t = estadoSinMarcar.pop();
+            resultado.add(t);
+            //para cada lestra del alafabeto
+            for (String s : alfabeto){
+                //obtiene un conjunto de aplicar la cerradura de los estados que se alcanza
+                HashSet<Estado> u = eClousureT(moveDeConjuntos(t,trancisions,s),trancisions);
+                // si el conjunto obtenido no esta en el marcado (resultado), lo pone en el stack de "sin marcar"
+                if(!resultado.contains(u)){
+                    estadoSinMarcar.add(u);
+                }
+                //finalmente crea una transion donde se uarda la informacion.
+                dTransicnoes.add( new TrancisionesAFD(t,u,s));
+            }
+        }
+        return dTransicnoes;
+    }
+
+    
 
 
     public Automata renumerar(Automata automata){
