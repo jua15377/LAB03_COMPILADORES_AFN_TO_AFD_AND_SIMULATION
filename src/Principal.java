@@ -1,7 +1,6 @@
 import java.util.HashSet;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Stack;
+
 
 /**
  * @author Jonnathan Juarez
@@ -46,11 +45,8 @@ public class Principal {
         /**
          * para DFA
          */
-        int id = afn.getEstadoInicale().getIdentifiacador();
-        System.out.println(id);
-        System.out.println(afn.getMapaDeEstados());
-        System.out.println("marca");
-        System.out.println(afn.getEstadoEspecifico(id));
-        System.out.println(unaClase.eClousureS2(afn.getEstadoEspecifico(id), afn.getTransicoines()));
+        HashSet<Estado> estadoInicial = new HashSet<>();
+        estadoInicial.add(afn.getEstadoInicale());
+        System.out.println(unaClase.eClousureT(estadoInicial,afn.getTransicoines()));
     }
 }

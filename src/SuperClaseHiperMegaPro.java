@@ -300,43 +300,79 @@ public class SuperClaseHiperMegaPro {
 
 
 
-    public HashSet<Estado> eClousureT(HashSet<Estado> estados, HashSet<Trancision> trancisions){
-        /**
-         * obtener todos los estados (lista de estados a parti de conjunto)
-         * obtenes todas las trancicisones
-         *
-         * crear conjuntos de etaddos nuevos vacio
-         * mientra haya estaos en la lista
-         *      paara cada trancion
-         *      si el estado que se saco de la lista es igual al estado inciial de la transicon
-         *            si el simbolo es @ entonces agregar al conjuntoNuevo de estados
-         *      si no pasar
-         *
-         */
-
+    public HashSet<Estado> eClousureT(HashSet<Estado> s, HashSet<Trancision> trancisions){
+        //agregar los estados del conjunto de entrada a un stack
         Stack<Estado> estadosAanalizar = new Stack<>();
-        estadosAanalizar.addAll(estados);
-        HashSet<Estado> estadoNuevos = new HashSet<>();
-        estadoNuevos.addAll(estados);
+        estadosAanalizar.addAll(s);
+        //agregar los estasods del conjunto S al eclosure
+        HashSet<Estado> resultadoEclosure = new HashSet<>();
+        resultadoEclosure.addAll(s);
+        //mientraas el stack no este vacio
         while (!estadosAanalizar.isEmpty()) {
+            //saca un elemento e del stack
             Estado e = estadosAanalizar.pop();
-            estadoNuevos.addAll(eClousureS2(e, trancisions));
+            //crea el cojunto de estado de lacerradura de u con epsion
+            HashSet<Estado> uConjunto = moveDeEstado(e,trancisions,"@");
+            //para cada uno de los estados de la pila revisa si ya esta en el conjunto resultant3
+            for (Estado u: uConjunto){
+                if(!resultadoEclosure.contains(u)){
+                    resultadoEclosure.add(u);
+                    estadosAanalizar.add(u);
+                }
+
+            }
 
         }
-        //if(estadoNuevos){}
-        return estadoNuevos;
+        return resultadoEclosure;
     }
-    public HashSet<Estado> eClousureS2(Estado estado, HashSet<Trancision> trancisionesDelAutomata){
+
+    /**
+     * funcion moveDeConjuntos
+     * @param estado conjunto de estados a analizar
+     * @param trancisionesDelAutomata sirve para evaluar la condicion de existencia de una
+     *                                transiconn.
+     * @param simbolo el simbolo que debe tener la transicion.
+     * @return conmunto con todos los estaod que se alcanzaron partir del resultado
+     */
+    public HashSet<Estado> moveDeConjuntos(HashSet<Estado> estado, HashSet<Trancision> trancisionesDelAutomata, String simbolo){
+        //crea stack con los estados a analizar
+        Stack<Estado> estadosAnalizar = new Stack<>();
+        estadosAnalizar.addAll(estado);
+        //crea el conjunto de estaddos resultantes
         HashSet<Estado> estadoAlcanzados = new HashSet<>();
-        System.out.println("en el emtodo " + estado);
+        //revisa en cada trancion que cumpla con que el estado inical es estado que se saco del srack
+        while (!estadosAnalizar.empty()) {
+            Estado e = estadosAnalizar.pop();
+            for (Trancision t : trancisionesDelAutomata) {
+                //si se cuple que hay una transico con ese simbolo
+                if (t.getEstadoInicial() == e && t.getSimbolos() == simbolo) {
+                    //agrega al resultado el estado al conjunto de resultados
+                    estadoAlcanzados.add(t.getEstadoFinal());
+                }
+            }
+        }
+        return  estadoAlcanzados;
+    }
+    /**
+     * funcion moveDeestados
+     * @param estado  estado a analizar
+     * @param trancisionesDelAutomata sirve para evaluar la condicion de existencia de una
+     *                                transiconn.
+     * @param simbolo el simbolo que debe tener la transicion.
+     * @return conmunto con todos los estaod que se alcanzaron partir del resultado
+     */
+    public HashSet<Estado> moveDeEstado(Estado estado, HashSet<Trancision> trancisionesDelAutomata, String simbolo) {
+        HashSet<Estado> estadoAlcanzados = new HashSet<>();
         estadoAlcanzados.add(estado);
         for (Trancision t : trancisionesDelAutomata) {
-            if(t.getEstadoInicial()== estado && t.getSimbolos() == "@") {
+            if(t.getEstadoInicial()== estado && t.getSimbolos() == simbolo) {
                 estadoAlcanzados.add(t.getEstadoFinal());
             }
         }
         return  estadoAlcanzados;
     }
+
+
     public Automata renumerar(Automata automata){
         HashSet<Estado> est =  automata.getEstados();
         int nuevaNumeracion = 0;
