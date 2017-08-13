@@ -283,10 +283,10 @@ public class SuperClaseHiperMegaPro {
             }
             contador2 ++;
         }
-        texto += "\nEn total son: " + contador2 + " transiones\n";
+        texto += "\nEn total son: " + contador2 + " transiciones\n";
         try {
             Writer output;
-            output = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "\\Resultados.txt"));  //clears file every time
+            output = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "\\AFN.txt"));  //clears file every time
             output.append(texto);
             output.close();
         }catch (IOException e) {
@@ -320,6 +320,7 @@ public class SuperClaseHiperMegaPro {
         }
         return resultadoEclosure;
     }
+
 
     /**
      * funcion moveDeConjuntos
@@ -368,7 +369,9 @@ public class SuperClaseHiperMegaPro {
         return  estadoAlcanzados;
     }
 
-    public HashSet<TrancisionesAFD> generacionDeSubSets(Automata automata){
+    public AutomataAFD convertToAFD(Automata automata){
+        //crear nuevo atomataAFD
+        AutomataAFD automataAFD = new AutomataAFD();
         //informacion necesarioa del afn
         HashSet<Estado> estados = automata.getEstados();
         HashSet<Trancision> trancisions = automata.getTransicoines();
@@ -379,35 +382,128 @@ public class SuperClaseHiperMegaPro {
         q0conjunto.add(q0);
         //almacenar toda la informacion de las trancisiones del futuro AFD
         HashSet<TrancisionesAFD> dTransicnoes = new HashSet<>();
-        //crea un estaod de los estaods que no se han revisado
+        //crea un estado de los estados que no se han revisado
         //stack de conjuntos de estados
         Stack<HashSet<Estado>> estadoSinMarcar = new Stack<>();
         //agrega el primer conjunto de estado a estados sin marcar
         HashSet<Estado> closureInical = eClousureT(q0conjunto, trancisions);
         estadoSinMarcar.add(closureInical);
         //este es el conjunto que conitiene los estados "Marcados"
-        HashSet<HashSet<Estado>>  resultado = new HashSet<>();
-        //mientras todavia exista conjuntos de estado en el stack de si "sin marcar"
+        HashSet<HashSet<Estado>>  estadosMarcados = new HashSet<>();
+        //mientras todavia exista conjuntos de estados en el stack de si "sin marcar"
+        //un contador
+        int cont = 0;
         while (!estadoSinMarcar.isEmpty()){
             //saca un elemento del stack y lo agrega a resultado (marcados)
             HashSet<Estado> t = estadoSinMarcar.pop();
-            resultado.add(t);
-            //para cada lestra del alafabeto
+            estadosMarcados.add(t);
+            //para cada letra del alafabeto
             for (String s : alfabeto){
                 //obtiene un conjunto de aplicar la cerradura de los estados que se alcanza
                 HashSet<Estado> u = eClousureT(moveDeConjuntos(t,trancisions,s),trancisions);
                 // si el conjunto obtenido no esta en el marcado (resultado), lo pone en el stack de "sin marcar"
-                if(!resultado.contains(u)){
+                if(!estadosMarcados.contains(u)){
                     estadoSinMarcar.add(u);
                 }
-                //finalmente crea una transion donde se uarda la informacion.
-                dTransicnoes.add( new TrancisionesAFD(t,u,s));
+                //finalmente crea una transion donde se guarda la informacion.
+                EstadoAFD estI = new EstadoAFD(cont,t);
+                EstadoAFD estF = new EstadoAFD(cont+1, u);
+                dTransicnoes.add( new TrancisionesAFD(estI,estF,s));
+                cont +=2;
             }
         }
-        return dTransicnoes;
+        //agregando estados a automataAFD
+        int contador = 0 ;
+        for(HashSet<Estado> e: estadosMarcados){
+            EstadoAFD estadoAFD = new EstadoAFD(contador, e);
+            automataAFD.addEstado(automataAFD, estadoAFD);
+            contador ++;
+        }
+        //por cada tranciones revisa cual es el conjunto de estados de la
+        //tranciones y lo compara con el conkunto de estados de cada EstadoDFA en el automata
+        for(TrancisionesAFD t: dTransicnoes) {
+            HashSet<EstadoAFD> estadosDeAFD = automataAFD.getEstados();
+            EstadoAFD nuevoInical = null;
+            EstadoAFD nuevoFinal = null;
+            //verifica y crea la referencia que se utiliza para crear ltrancision
+            for (EstadoAFD e: estadosDeAFD) {
+                if (e.getEstadosQueContiene().equals(t.getConjuntoOrigen().getEstadosQueContiene())) {
+                    nuevoInical = e;
+                }
+                if (e.getEstadosQueContiene().equals(t.getConjuntoDestino().getEstadosQueContiene())) {
+                    nuevoFinal = e;
+                }
+
+            }
+            //guarda la tenacion en el automata
+            automataAFD.addTrancion(automataAFD, nuevoInical, nuevoFinal, t.getSimbolo());
+        }
+
+        return automataAFD;
     }
 
-    
+    public void crearTextoAFD(AutomataAFD automata){
+        String texto = "";
+        HashSet<EstadoAFD> estadosAFD = automata.getEstados();
+        texto += "ESTADOS = {";
+        int contador = 0;
+        for (EstadoAFD e: estadosAFD) {
+            texto += String.valueOf((e.getIdentifiacador()));
+            if (contador < estadosAFD.size()-1){
+                texto  += ", ";
+            }
+            else {
+                texto += "}\n";
+            }
+            contador ++;
+        }
+
+        texto += "En total son: " + contador + " estados\n";
+        // agrega simbolos del alfabeto
+        texto += "SIMBOLOS = " + getAlfabeto() +"\n";
+        // agregar nodo final e inicial
+        texto +=  "INICIO = {"+ String.valueOf(automata.getEstadoInicale().getIdentifiacador()) + " }\n";
+
+        ArrayList<EstadoAFD> estDeacptacion = automata.getEstadoFinal();
+        texto +=  "ACEPTACION = {";
+        contador = 0;
+        for (EstadoAFD e :estDeacptacion ){
+            texto +=  String.valueOf(e.getIdentifiacador());
+            if (contador < estDeacptacion.size()-1){
+                texto  += ", ";
+            }
+            else {
+                texto += "}\n";
+            }
+            contador ++;
+        }
+
+        // agregando transciones
+        HashSet<TrancisionesAFD> transionesAFD = automata.getTransicoines();
+        texto += "TRANCIONES = {";
+        int contador2 = 0;
+        for (TrancisionesAFD t: transionesAFD) {
+            texto += t.toString();
+            if (contador2 < transionesAFD.size()-1){
+                texto  += "-";
+            }
+            else {
+                texto += "}";
+            }
+            contador2 ++;
+        }
+        texto += "\nEn total son: " + contador2 + " transiciones\n";
+
+        try {
+            Writer output;
+            output = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + "\\AFD.txt"));  //clears file every time
+            output.append(texto);
+            output.close();
+        }catch (IOException e) {
+            //exception handling left as an exercise for the reader
+        }
+
+    }
 
 
     public Automata renumerar(Automata automata){
