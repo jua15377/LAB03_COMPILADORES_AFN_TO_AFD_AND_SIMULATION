@@ -328,7 +328,7 @@ public class SuperClaseHiperMegaPro {
      * @param trancisionesDelAutomata sirve para evaluar la condicion de existencia de una
      *                                transiconn.
      * @param simbolo el simbolo que debe tener la transicion.
-     * @return conmunto con todos los estaod que se alcanzaron partir del resultado
+     * @return conmunto con todos los estados que se alcanzaron partir del resultado
      */
     public HashSet<Estado> moveDeConjuntos(HashSet<Estado> estado, HashSet<Trancision> trancisionesDelAutomata, String simbolo){
         //crea stack con los estados a analizar
@@ -517,5 +517,62 @@ public class SuperClaseHiperMegaPro {
         }
         automata.setMapaDeEstados(nuevoMapa);
         return automata;
+    }
+
+    /**
+     * clase que simula (evalua la cadena dada) para un dfa
+     * @return true si se acepta la cadena o false de lo contrario
+     */
+    public boolean simuladorDFA(AutomataAFD automataAFD, String cadena){
+        HashSet<TrancisionesAFD> trancisionesAFD = automataAFD.getTransicoines();
+        EstadoAFD s = automataAFD.getEstadoInicale();
+        ArrayList<EstadoAFD> estadosFinales = automataAFD.getEstadoFinal();
+        int cont = 0;
+        while (cont < cadena.length()){
+            String c = cadena.substring(cont, cont+1);
+            s = moveDeEstadoAFD(s, trancisionesAFD, c);
+            cont ++;
+        }
+        if (estadosFinales.contains(s)){
+            return true;
+        }
+        else{return false;}
+    }
+
+    /**
+     * funcion moveDeestadosAFD adapataccion de la funcion utilizada anteriormente.
+     * @param estado  estado a analizar
+     * @param trancisionesDelAutomata sirve para evaluar la condicion de existencia de una
+     *                                transiconn.
+     * @param simbolo el simbolo que debe tener la transicion.
+     * @return conmunto con todos los estaod que se alcanzaron partir del resultado
+     */
+    public EstadoAFD moveDeEstadoAFD(EstadoAFD estado, HashSet<TrancisionesAFD> trancisionesDelAutomata, String simbolo) {
+        EstadoAFD estadoAlcanzado;
+        for (TrancisionesAFD t : trancisionesDelAutomata) {
+            if(t.getConjuntoOrigen().equals(estado) && t.getSimbolo().equals(simbolo)) {
+                estadoAlcanzado = t.getConjuntoDestino();
+                return  estadoAlcanzado;
+            }
+        }
+        return null; // no debertia de pasar
+    }
+    public boolean simuladorNFA(Automata automata, String cadena){
+        HashSet<Trancision> trancisiones = automata.getTransicoines();
+        Estado estadoinicial = automata.getEstadoInicale();
+        HashSet<Estado> conjuntoInical = new HashSet<>();
+        conjuntoInical.add(estadoinicial);
+        HashSet<Estado> s = eClousureT(conjuntoInical, trancisiones);
+        Estado estadosFinal = automata.getEstadoFinal();
+        int cont = 0;
+        while (cont < cadena.length()){
+            String c = cadena.substring(cont, cont+1);
+            s = eClousureT(moveDeConjuntos(s, trancisiones, c), trancisiones);
+            cont ++;
+        }
+        if (s.contains(estadosFinal)){
+            return true;
+        }
+        else{return false;}
     }
 }

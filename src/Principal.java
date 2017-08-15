@@ -47,5 +47,12 @@ public class Principal {
          */
         AutomataAFD automataAFD = unaClase.convertToAFD(afn);
         unaClase.crearTextoAFD(automataAFD);
+        //probando simulacion
+        boolean result = unaClase.simuladorDFA(automataAFD, "ababababababb");
+        if (result){System.out.println("si se acepta la cadena en dfa");}
+
+        // para simulacion fna
+        boolean result2 = unaClase.simuladorNFA(afn, "ababababababbbbbb");
+        if (result2){System.out.println("si se acepta la cadena en nfa");}
     }
 }
