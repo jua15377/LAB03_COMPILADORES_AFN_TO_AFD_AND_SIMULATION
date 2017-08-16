@@ -406,7 +406,7 @@ public class SuperClaseHiperMegaPro {
                     estadoSinMarcar.add(u);
                 }
                 //finalmente crea una transion donde se guarda la informacion.
-                EstadoAFD estI = new EstadoAFD(cont,t);
+                EstadoAFD estI = new EstadoAFD(cont, t);
                 EstadoAFD estF = new EstadoAFD(cont+1, u);
                 dTransicnoes.add( new TrancisionesAFD(estI,estF,s));
                 cont +=2;
@@ -423,20 +423,20 @@ public class SuperClaseHiperMegaPro {
         //tranciones y lo compara con el conkunto de estados de cada EstadoDFA en el automata
         for(TrancisionesAFD t: dTransicnoes) {
             HashSet<EstadoAFD> estadosDeAFD = automataAFD.getEstados();
-            EstadoAFD nuevoInical = null;
-            EstadoAFD nuevoFinal = null;
-            //verifica y crea la referencia que se utiliza para crear ltrancision
+          //  EstadoAFD nuevoInical = null;
+          //  EstadoAFD nuevoFinal = null;
+            //verifica y crea la referencia que se utiliza para crear la trancision
             for (EstadoAFD e: estadosDeAFD) {
                 if (e.getEstadosQueContiene().equals(t.getConjuntoOrigen().getEstadosQueContiene())) {
-                    nuevoInical = e;
+                    t.setConjuntoOrigen(e);
                 }
                 if (e.getEstadosQueContiene().equals(t.getConjuntoDestino().getEstadosQueContiene())) {
-                    nuevoFinal = e;
+                    t.setConjuntoDestino(e);
                 }
 
             }
-            //guarda la tenacion en el automata
-            automataAFD.addTrancion(automataAFD, nuevoInical, nuevoFinal, t.getSimbolo());
+            //guarda la transicion en el automata
+            automataAFD.addTrancion(automataAFD, t);
         }
 
         return automataAFD;

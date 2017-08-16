@@ -40,6 +40,7 @@ public class AutomataAFD {
      */
     public void addTrancion(AutomataAFD a, TrancisionesAFD t){
         a.transicoines.add(t);
+
     }
 
 

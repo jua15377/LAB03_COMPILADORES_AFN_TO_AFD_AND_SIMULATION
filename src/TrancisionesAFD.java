@@ -48,6 +48,25 @@ public class TrancisionesAFD {
         this.simbolo = simbolo;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TrancisionesAFD)) return false;
+
+        TrancisionesAFD that = (TrancisionesAFD) o;
+
+        if (!getSimbolo().equals(that.getSimbolo())) return false;
+        if (!getConjuntoOrigen().equals(that.getConjuntoOrigen())) return false;
+        return getConjuntoDestino().equals(that.getConjuntoDestino());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getSimbolo().hashCode();
+        result = 31 * result + getConjuntoOrigen().hashCode();
+        result = 31 * result + getConjuntoDestino().hashCode();
+        return result;
+    }
 }
 
 
