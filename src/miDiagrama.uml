@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="0.0" y="731.0">AutomataAFD</node>
+    <node x="0.0" y="1192.0">Estado</node>
+    <node x="1142.0" y="0.0">Automata</node>
+    <node x="716.0" y="0.0">RegExConverter</node>
+    <node x="1004.0" y="731.0">Trancision</node>
+    <node x="0.0" y="0.0">SuperClaseHiperMegaPro</node>
+    <node x="328.0" y="1192.0">Principal</node>
+    <node x="554.0" y="731.0">TrancisionesAFD</node>
+    <node x="696.0" y="195.0">EstadoAFD</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="EstadoAFD" target="RegExConverter">
+      <point x="0.0" y="-208.0" />
+      <point x="0.0" y="72.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5" x="1791.75" y="484.4999999999999" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

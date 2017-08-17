@@ -4,7 +4,7 @@ import java.util.HashSet;
  * @version 1.0 02/08/2017
  */
 
-public class EstadoAFD {
+public class EstadoAFD extends RegExConverter {
     private boolean esFinal;
     private boolean esInical;
     private HashSet<Estado> estadosQueContiene = new HashSet<>();

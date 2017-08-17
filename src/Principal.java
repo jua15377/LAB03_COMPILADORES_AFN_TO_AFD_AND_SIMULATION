@@ -13,46 +13,58 @@ public class Principal {
         SuperClaseHiperMegaPro unaClase = new SuperClaseHiperMegaPro();
         String entrada;
 
+        long startTime ;
+        long finishTime;
+        Double tiempo;
 
         //PEDIR REGEX AL USUARIO
         System.out.println("Ingrese la expresion regular del automata. Notose @ simboliza epsilon");
         entrada = teclado.nextLine();
-        //entrada = "ab*";
+        //pide cadena a usuario
+        System.out.println("Ingrese la cadena a evaluar");
+        String cadena = teclado.nextLine();
         String expresionPostfix = RegExConverter.infixToPostfix(entrada);
-        System.out.println(expresionPostfix);
+        System.out.println("Esta es la traduccion a postfix" + expresionPostfix);
         unaClase.determinarAlfabeto(expresionPostfix);
 
-        //devuelve el alfabeto
-        System.out.println("alfabeto");
-        System.out.println(unaClase.getAlfabeto());
-        long startTime = System.currentTimeMillis();
+        startTime = System.nanoTime();
         Automata afn = unaClase.analizador(expresionPostfix);
-        long finishTime = System.currentTimeMillis();
-        long tiempo = finishTime - startTime;
-        System.out.println("Tiempo es: ");
-        System.out.println(tiempo);
+        finishTime = System.nanoTime();
+        tiempo = (finishTime - startTime)/1000000.0;
+        System.out.println("Tiempo de cracion de nfa  es: ");
+        System.out.println(tiempo +" ms");
+        //genrartexto
+        unaClase.crearTextFile(afn);
 
-        HashSet<Trancision> trans =  afn.getTransicoines();
-        for(Trancision i : trans){
-            System.out.println(i.toString());
-        }
-        System.out.println("el estado final es");
-        System.out.println(afn.getEstadoFinal().getIdentifiacador());
-
-        System.out.println("el estado inicial es");
-        System.out.println(afn.getEstadoInicale().getIdentifiacador());
 
         /**
          * para DFA
          */
+        startTime = System.nanoTime();
         AutomataAFD automataAFD = unaClase.convertToAFD(afn);
+        finishTime = System.nanoTime();
+        tiempo = (finishTime - startTime)/1000000.0;
+        System.out.println("Tiempo de cracion de conversion de nfa a dfa  es: ");
+        System.out.println(tiempo +" ms");
         unaClase.crearTextoAFD(automataAFD);
+
+
         //probando simulacion
-        boolean result = unaClase.simuladorDFA(automataAFD, "ababababababb");
+        startTime = System.nanoTime();
+        boolean result = unaClase.simuladorDFA(automataAFD, cadena);
+        finishTime = System.nanoTime();
+        tiempo = (finishTime - startTime)/1000000.0;
+        System.out.println("Tiempo de simulacion del dfa  es: ");
+        System.out.println(tiempo +" ms");
         if (result){System.out.println("si se acepta la cadena en dfa");}
 
         // para simulacion fna
-        boolean result2 = unaClase.simuladorNFA(afn, "ababababababbbbbb");
+        startTime = System.nanoTime();
+        boolean result2 = unaClase.simuladorNFA(afn, cadena);
+        finishTime = System.nanoTime();
+        tiempo = (finishTime - startTime)/1000000.0;
+        System.out.println("Tiempo de simulaicon del nfa es: ");
+        System.out.println(tiempo +" ms");
         if (result2){System.out.println("si se acepta la cadena en nfa");}
     }
 }

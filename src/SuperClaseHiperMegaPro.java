@@ -33,21 +33,6 @@ public class SuperClaseHiperMegaPro {
         return alfabeto;
     }
 
-    //trabajo en progreso
-    public String analizadorDeAbreviaturas(String cadenaRegex) {
-        String nuevaCadena = "";
-        for (int i = 0; i < cadenaRegex.length(); i++) {
-            //cambia el simbolo de abreviatura por su valor origina
-            if (String.valueOf(cadenaRegex.charAt(i)).equals("+")) {
-                nuevaCadena += "(" + String.valueOf(cadenaRegex.charAt(i - 1)) + String.valueOf(cadenaRegex.charAt(i - 1)) + "*)";
-            } else if (String.valueOf(cadenaRegex.charAt(i)).equals("?")) {
-                nuevaCadena += "(" + String.valueOf(cadenaRegex.charAt(i - 1)) + "|@)";
-            } else {
-                nuevaCadena += String.valueOf(cadenaRegex.charAt(i));
-            }
-        }
-        return nuevaCadena;
-    }
     /**
      * Evalula la expresion y determina que operacion hacer, add or pop del stack y cuantas veces hacerlo
      *
@@ -100,7 +85,7 @@ public class SuperClaseHiperMegaPro {
             }
         }
         Automata automataFinal = stackDeAutomatas.pop();
-        crearTextFile(automataFinal);
+        //crearTextFile(automataFinal);
         return automataFinal;
     }
     public Automata crearAutomataSimple(String simbolo){
